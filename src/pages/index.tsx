@@ -16,9 +16,7 @@ export const Page: NextPage = () => {
       </Head>
       <main>
         <div>
-          <p>
-            chat-app
-          </p>
+          <p>chat-app</p>
         </div>
       </main>
     </>
