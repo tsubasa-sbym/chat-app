@@ -12,27 +12,34 @@ import {
   Spacer,
 } from '@chakra-ui/react'
 import { FormEvent, useState } from 'react'
-import { createUserWithEmailAndPassword, getAuth } from 'firebase/auth'
+import {
+  createUserWithEmailAndPassword,
+  getAuth,
+  sendEmailVerification,
+} from 'firebase/auth'
 import { FirebaseError } from '@firebase/util'
-
-// const signUp = async () => {
-//   try {
-//     const auth = getAuth()
-//     await createUserWithEmailAndPassword(auth, email, password)
-//   } catch (e) {
-//     if (e instanceof FirebaseError) {
-//       console.log(e)
-//     }
-//   }
-// }
 
 export const Page = () => {
   const [email, setEmail] = useState<string>('')
   const [password, setPassword] = useState<string>('')
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
-    console.log({ email, password })
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+    try {
+      const auth = getAuth()
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      )
+      await sendEmailVerification(userCredential.user)
+      setEmail('')
+      setPassword('')
+    } catch (e) {
+      if (e instanceof FirebaseError) {
+        console.log(e)
+      }
+    }
   }
 
   return (
